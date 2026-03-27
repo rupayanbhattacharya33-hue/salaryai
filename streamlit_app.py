@@ -16,73 +16,49 @@ le_country = pickle.load(open(BASE + "le_country.pkl", "rb"))
 le_gender  = pickle.load(open(BASE + "le_gender.pkl", "rb"))
 meta       = json.load(open(BASE + "meta.json"))
 
-INR_RATE = 83.5
+INR_RATE = 94.25
 EXTRA_COUNTRIES = {'India': 0.35, 'Pakistan': 0.22, 'UAE': 0.75}
 
 st.markdown("""
 <style>
 @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap');
-
 html, body, [class*="css"] { font-family: 'Inter', sans-serif; }
-
 .hero {
     background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-    padding: 2.5rem 2rem;
-    border-radius: 16px;
-    margin-bottom: 2rem;
-    color: white;
-    text-align: center;
+    padding: 2.5rem 2rem; border-radius: 16px;
+    margin-bottom: 2rem; color: white; text-align: center;
 }
 .hero h1 { font-size: 2.8rem; font-weight: 700; margin: 0; }
 .hero p  { font-size: 1.1rem; opacity: 0.85; margin-top: 0.5rem; }
-
 .result-card {
     background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
-    padding: 1.5rem;
-    border-radius: 16px;
-    color: white;
-    text-align: center;
-    margin-bottom: 1rem;
+    padding: 1.5rem; border-radius: 16px; color: white;
+    text-align: center; margin-bottom: 1rem;
 }
 .result-card .amount { font-size: 3rem; font-weight: 700; }
 .result-card .label  { font-size: 0.9rem; opacity: 0.85; }
-
 .inr-card {
     background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);
-    padding: 1.5rem;
-    border-radius: 16px;
-    color: white;
-    text-align: center;
-    margin-bottom: 1rem;
+    padding: 1.5rem; border-radius: 16px; color: white;
+    text-align: center; margin-bottom: 1rem;
 }
 .inr-card .amount { font-size: 2rem; font-weight: 700; }
 .inr-card .label  { font-size: 0.9rem; opacity: 0.85; }
-
 .stat-card {
-    background: white;
-    border: 1px solid #e5e7eb;
-    border-radius: 12px;
-    padding: 1rem;
-    text-align: center;
+    background: white; border: 1px solid #e5e7eb;
+    border-radius: 12px; padding: 1rem; text-align: center;
     box-shadow: 0 2px 8px rgba(0,0,0,0.06);
 }
 .stat-card .val { font-size: 1.4rem; font-weight: 700; color: #6366f1; }
 .stat-card .lbl { font-size: 0.8rem; color: #6b7280; margin-top: 2px; }
-
 .compare-card {
     background: linear-gradient(135deg, #a8edea 0%, #fed6e3 100%);
-    border-radius: 12px;
-    padding: 1rem 1.2rem;
-    margin-top: 0.5rem;
+    border-radius: 12px; padding: 1rem 1.2rem; margin-top: 0.5rem;
 }
 .tip-box {
-    background: #fffbeb;
-    border-left: 4px solid #f59e0b;
-    border-radius: 0 8px 8px 0;
-    padding: 0.75rem 1rem;
-    margin-top: 1rem;
-    font-size: 0.9rem;
-    color: #92400e;
+    background: #fffbeb; border-left: 4px solid #f59e0b;
+    border-radius: 0 8px 8px 0; padding: 0.75rem 1rem;
+    margin-top: 1rem; font-size: 0.9rem; color: #92400e;
 }
 </style>
 """, unsafe_allow_html=True)
@@ -98,7 +74,6 @@ col1, col2 = st.columns([1, 1.5], gap="large")
 
 with col1:
     st.markdown("### 🧑‍💼 Your Profile")
-
     job_title   = st.selectbox("Job Title", sorted(meta['job_titles']))
     experience  = st.slider("Years of Experience", 0, 30, 3)
     age         = st.slider("Age", 18, 65, 28)
@@ -152,7 +127,7 @@ with col2:
             <div class="inr-card">
                 <div class="label">Equivalent in INR</div>
                 <div class="amount">₹{salary_inr:,.0f}</div>
-                <div class="label">@ ₹83.5 per $1</div>
+                <div class="label">@ ₹94.25 per $1 (Mar 2026)</div>
             </div>""", unsafe_allow_html=True)
 
         st.caption(f"Estimated range: ${salary_min:,.0f} — ${salary_max:,.0f} USD")
@@ -170,7 +145,7 @@ with col2:
         st.markdown(f"""
         <div class="compare-card">
             <strong>{arrow} Comparison: {compare_exp} yrs exp in {compare_country}</strong><br>
-            Predicted: <strong>${compare_usd:,.0f}</strong> — 
+            Predicted: <strong>${compare_usd:,.0f}</strong> —
             that's <strong>{abs(diff_pct):.1f}% {"more" if compare_usd > salary_usd else "less"}</strong> than your profile
         </div>""", unsafe_allow_html=True)
 
@@ -266,8 +241,7 @@ with t3:
 with t4:
     sample_size = min(1000, len(df))
     fig4 = px.scatter(df.sample(sample_size, random_state=42), x='Experience', y='Salary',
-                      color='Country', opacity=0.6, title="Salary vs Experience",
-                      trendline="lowess")
+                  color='Country', opacity=0.6, title="Salary vs Experience")
     fig4.update_layout(plot_bgcolor='rgba(0,0,0,0)', paper_bgcolor='rgba(0,0,0,0)')
     st.plotly_chart(fig4, use_container_width=True)
 
@@ -281,4 +255,4 @@ with t5:
     st.plotly_chart(fig5, use_container_width=True)
 
 st.divider()
-st.caption("SalaryAI · Random Forest ML · R²=0.965 · Built with Python, scikit-learn, Streamlit, Plotly · INR rate ₹83.5/$1")
+st.caption("SalaryAI · Random Forest ML · R²=0.965 · Built with Python, scikit-learn, Streamlit, Plotly · INR rate ₹94.25/$1 (Mar 2026)")
